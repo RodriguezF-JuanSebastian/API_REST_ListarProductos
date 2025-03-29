@@ -7,6 +7,9 @@ package com.example.product_api; //Define el paquete al que pertenece la clase
 import org.junit.jupiter.api.BeforeEach; //Este import trae las anotaciones y utilidades de JUnit 5
 import org.junit.jupiter.api.Test;
 
+import com.example.product_api.Controller.ProductController;
+import com.example.product_api.model.Product;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*; 

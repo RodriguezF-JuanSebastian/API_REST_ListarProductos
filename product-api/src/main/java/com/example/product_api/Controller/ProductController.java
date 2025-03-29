@@ -1,6 +1,9 @@
-package com.example.product_api; //Indica que esta clase forma parte del paquete, organiza el codigo en JAVA
+package com.example.product_api.Controller; //Indica que esta clase forma parte del paquete, organiza el codigo en JAVA
 
 import org.springframework.web.bind.annotation.*; //Importando anotaciones de Spring Web que permiten construir el controlador REST
+
+import com.example.product_api.model.Product;
+
 import java.util.ArrayList; //Son colecciones de Java que permiten guardar los productos temporalemente
 import java.util.List; //Son colecciones de Java que permiten guardar los productos temporalmente
 
