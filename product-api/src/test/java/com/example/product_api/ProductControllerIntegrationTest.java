@@ -34,6 +34,8 @@ import org.springframework.test.web.servlet.MockMvc;
 */
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.springframework.http.MediaType;
+import org.hamcrest.Matchers;
 /**
  * Importa estáticos para hacer código más limpio
  * MockMvcRequestBuilders: construir solicitudes get, post, delete
@@ -75,7 +77,7 @@ public class ProductControllerIntegrationTest {
          */
         mockMvc.perform(delete("/products/99")) 
         //Envía una petición DELETE al recurso /products/99 (producto inexistente)
-            .andExpect(status().isOk()) 
+            .andExpect(status().isNotFound()) 
             .andExpect(content().string("Producto no encontrado"));
             /*
              * Verifica que la respuesta HTTP sea 200 OK.
@@ -83,22 +85,18 @@ public class ProductControllerIntegrationTest {
              */
     }
 
-    @Test //Prueba 3 testAddProductEndpoint()
-    void testAddProductEndpoint() throws Exception{
-    //Una prueba para verificar si el endpoint POST /products permite agregar un nuevo producto.
-        String newProductJson = "{\"id\": 5, \"name\": \"Nuevo teclado\"}";
-        //Una cadena que simula el JSON que se enviaría en el body de la solicitud POST
-        mockMvc.perform(post("/products")
-            .contentType("application/json")
-            .content(newProductJson))
-        /*
-         * Estas tres lineas hacen una petición POST al endpoint /products que indican que el contenido es JSON.
-         * Envía el newProductJson como cuerpo
-         */
-            .andExpect(status().isOk()) //Espera que la respuesta HTTP sea 200 OK
-            .andExpect(jsonPath("$.id").value(5)) 
-            .andExpect(jsonPath("$.name").value("Nuevo teclado")); 
-            //Verifica que el JSON de respuesta contenga el id con valor 5 y verifica que el name sea "Nuevo teclado"
+    @Test
+    public void testAddProductEndpoint() throws Exception {
+    // Producto de prueba
+    String productJson = "{ \"name\": \"Teclado\" }";
+
+    mockMvc.perform(post("/products") //mockMvc.perform(...) inicia una solicitud HTTP simulada para probar el endpoint post("/products") envía una solicitud HTTP POST a la ruta /products, simulando la creación de un producto
+            .contentType(MediaType.APPLICATION_JSON) //Indica que el cuerpo de la solicitud está en formato JSON es necesario porque el controlador espera datos en formato JSON en @RequestBody
+            .content(productJson)) //productJson es una cadena JSON que representa un producto (por ejemplo, "{\"id\":10,\"name\":\"Teclado\"}") envía el contenido JSON en el cuerpo de la solicitud POST
+        .andExpect(status().isCreated()) //.andExpect(...) define lo que se espera como resultado de la solicitud status().isCreated() verifica que el servidor responda con el código de estado 201 CREATED Esto indica que el producto se creó correctamente en la API.
+        .andExpect(jsonPath("$.id").isNumber()) // Verifica que el ID sea un número
+        .andExpect(jsonPath("$.id").value(Matchers.greaterThan(0))) // Verifica que sea mayor a 0
+        .andExpect(jsonPath("$.name").value("Teclado")); // Verifica el nombre del producto
     }
  
 }
