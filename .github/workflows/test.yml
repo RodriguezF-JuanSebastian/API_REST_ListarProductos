@@ -1,0 +1,30 @@
+#prueba 1 para subir pipeline
+name: Pruebas Automatizadas
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Configurar JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          
+      - name: Moverse al directorio correcto
+        run: cd product-api
+
+      - name: Dar permisos a mvnw
+        run: chmod +x product-api/mvnw
+
+      - name: Ejecutar pruebas
+        run: cd product-api && ./mvnw test
+
